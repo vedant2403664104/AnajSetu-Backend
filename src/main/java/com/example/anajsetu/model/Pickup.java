@@ -24,7 +24,7 @@ public class Pickup {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     @OneToOne
     @JoinColumn(name = "claim_id", nullable = false, unique = true)

@@ -24,7 +24,7 @@ public class FoodListing {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     @ManyToOne
     @JoinColumn(name = "donor_id", nullable = false)
@@ -36,7 +36,7 @@ public class FoodListing {
     private String description;
 
     @Column(nullable = false)
-    private int quantity;
+    private Integer quantity;
 
     @Column(name = "quantity_unit", nullable = false)
     private String quantityUnit;

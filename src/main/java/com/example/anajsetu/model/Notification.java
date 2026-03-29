@@ -24,7 +24,7 @@ public class Notification {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
@@ -37,7 +37,7 @@ public class Notification {
     private String type;
 
     @Column(name = "is_read")
-    private int isRead = 0;
+    private Integer isRead = 0;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt = LocalDateTime.now();

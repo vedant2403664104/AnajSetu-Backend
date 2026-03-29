@@ -24,7 +24,7 @@ public class Compost {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     @ManyToOne
     @JoinColumn(name = "listing_id", nullable = false)
@@ -41,7 +41,7 @@ public class Compost {
     private LocalDateTime collectedAt;
 
     @Column(name = "biogas_output_kg")
-    private int biogasOutputKg;
+    private Integer biogasOutputKg;
 
     @Column(nullable = false)
     private String status = "PENDING";

@@ -34,13 +34,15 @@ public ResponseEntity<User> registerUser(@RequestBody User user) {
 
     // LOGIN
     @PostMapping("/login")
-    public ResponseEntity<?> loginUser(@RequestBody User user) {
-        Optional<User> foundUser = userService.loginUser(user.getEmail(), user.getPassword());
-        if (foundUser.isPresent()) {
-            return new ResponseEntity<>(foundUser.get(), HttpStatus.OK);
-        }
-        return new ResponseEntity<>("Invalid email or password", HttpStatus.UNAUTHORIZED);
+public ResponseEntity<?> loginUser(@RequestBody java.util.Map<String, String> credentials) {
+    String email = credentials.get("email");
+    String password = credentials.get("password");
+    Optional<User> foundUser = userService.loginUser(email, password);
+    if (foundUser.isPresent()) {
+        return new ResponseEntity<>(foundUser.get(), HttpStatus.OK);
     }
+    return new ResponseEntity<>("Invalid email or password", HttpStatus.UNAUTHORIZED);
+}
 
     // GET ALL USERS
     @GetMapping
