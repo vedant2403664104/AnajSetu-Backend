@@ -43,4 +43,4 @@ public class Claim {
     @Column(nullable = false)
     private String status = "PENDING";
 
-};
+}
