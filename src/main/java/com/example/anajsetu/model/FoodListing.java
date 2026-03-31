@@ -1,17 +1,7 @@
 package com.example.anajsetu.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.persistence.*;
+import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
@@ -20,43 +10,47 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class FoodListing {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne
-    @JoinColumn(name = "donor_id", nullable = false)
-    private User donor;
+    @Column(name = "donor_id") // Maps Java camelCase to SQL underscore
+    private Integer donorId;
 
-    @Column(nullable = false)
     private String title;
 
+    @Column(columnDefinition = "TEXT")
     private String description;
 
-    @Column(nullable = false)
     private Integer quantity;
 
-    @Column(name = "quantity_unit", nullable = false)
+    @Column(name = "quantity_unit")
     private String quantityUnit;
 
-    @Column(name = "food_type", nullable = false)
-    private String foodType;
+    @Column(name = "food_type")
+    private String foodType; // THIS FIXES YOUR ERROR
 
-    @Column(name = "pickup_address", nullable = false)
+    @Column(name = "pickup_address")
     private String pickupAddress;
 
-    @Column(name = "expiry_time", nullable = false)
+    @Column(name = "expiry_time")
     private LocalDateTime expiryTime;
 
-    @Column(name = "pickup_deadline", nullable = false)
+    @Column(name = "pickup_deadline")
     private LocalDateTime pickupDeadline;
 
-    @Column(nullable = false)
-    private String status = "AVAILABLE";
+    private String status;
 
-    @Column(name = "created_at")
-    private LocalDateTime createdAt = LocalDateTime.now();
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt;
 
+    @Version
+    private Integer version;
+
+    @ManyToOne
+    @JoinColumn(name = "claimed_by_id")
+    private User claimedBy;
 }
