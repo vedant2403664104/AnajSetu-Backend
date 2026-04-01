@@ -10,23 +10,26 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/listings")
+@RequestMapping("/api/food-listings")   // ✅ fixed
 @CrossOrigin(origins = "http://localhost:3000")
 public class FoodListingController {
 
     @Autowired
     private FoodListingService foodListingService;
 
+    // CREATE listing
     @PostMapping
     public ResponseEntity<FoodListing> createListing(@RequestBody FoodListing foodListing) {
         return new ResponseEntity<>(foodListingService.createListing(foodListing), HttpStatus.CREATED);
     }
 
+    // GET all available
     @GetMapping("/available")
     public ResponseEntity<List<FoodListing>> getAvailable() {
         return new ResponseEntity<>(foodListingService.getAvailableListings(), HttpStatus.OK);
     }
 
+    // GET by ID
     @GetMapping("/{id}")
     public ResponseEntity<FoodListing> getListingById(@PathVariable int id) {
         return foodListingService.getListingById(id)
@@ -34,6 +37,7 @@ public class FoodListingController {
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
+    // CLAIM listing
     @PutMapping("/{id}/claim/{ngoId}")
     public ResponseEntity<?> claimListing(@PathVariable int id, @PathVariable int ngoId) {
         try {
@@ -44,6 +48,7 @@ public class FoodListingController {
         }
     }
 
+    // DELETE listing
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteListing(@PathVariable int id) {
         foodListingService.deleteListing(id);
