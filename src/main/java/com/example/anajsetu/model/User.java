@@ -1,15 +1,7 @@
 package com.example.anajsetu.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.persistence.*;
+import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
@@ -27,24 +19,22 @@ public class User {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false, unique = true)
-    private String email;
+    @Column(unique = true)
+    private String email;           // ← now nullable (optional for phone users)
+
+    private String password;        // ← now nullable (optional for phone users)
+
+    @Column(unique = true)
+    private String phone;           // ← now unique (main login identifier)
 
     @Column(nullable = false)
-    private String password;
-
-    private String phone;
-
-    @Column(nullable = false)
-    private String role;
+    private String role;            // "USER", "NGO", "VOLUNTEER"
 
     @Column(name = "is_verified")
-    // AFTER
-    private Integer isVerified = 0;
+    private Integer isVerified = 0; // 0 = not verified, 1 = verified
 
     private String address;
 
-    @Column(name = "created_at")
+    @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
-
 }

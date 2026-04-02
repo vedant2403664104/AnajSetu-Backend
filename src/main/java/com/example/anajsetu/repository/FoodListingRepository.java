@@ -12,8 +12,11 @@ public interface FoodListingRepository extends JpaRepository<FoodListing, Intege
 
     List<FoodListing> findByDonorId(int donorId);
 
+    List<FoodListing> findByNgoId(int ngoId);
+
+    List<FoodListing> findByDriverId(int driverId);
+
     List<FoodListing> findByFoodType(String foodType);
 
     List<FoodListing> findByStatusAndFoodType(String status, String foodType);
-
 }

@@ -23,19 +23,38 @@ public class FoodListingService {
     @Autowired
     private UserRepository userRepository;
 
+    // CREATE
     public FoodListing createListing(FoodListing foodListing) {
         foodListing.setStatus("AVAILABLE");
         return foodListingRepository.save(foodListing);
     }
 
+    // GET ALL AVAILABLE
     public List<FoodListing> getAvailableListings() {
         return foodListingRepository.findByStatus("AVAILABLE");
     }
 
+    // GET BY ID
     public Optional<FoodListing> getListingById(int id) {
         return foodListingRepository.findById(id);
     }
 
+    // GET BY DONOR ID
+    public List<FoodListing> getByDonor(int donorId) {
+        return foodListingRepository.findByDonorId(donorId);
+    }
+
+    // GET BY NGO ID
+    public List<FoodListing> getByNgo(int ngoId) {
+        return foodListingRepository.findByNgoId(ngoId);
+    }
+
+    // GET BY DRIVER ID
+    public List<FoodListing> getByDriver(int driverId) {
+        return foodListingRepository.findByDriverId(driverId);
+    }
+
+    // CLAIM
     @Transactional
     public FoodListing claimListing(int listingId, int ngoId) {
         FoodListing listing = foodListingRepository.findById(listingId)
@@ -49,7 +68,8 @@ public class FoodListingService {
         }
 
         listing.setStatus("CLAIMED");
-        listing.setClaimedBy(ngo); 
+        listing.setClaimedBy(ngo);
+        listing.setNgoPhone(ngo.getPhone());
 
         try {
             return foodListingRepository.save(listing);
@@ -58,6 +78,26 @@ public class FoodListingService {
         }
     }
 
+    // DELIVER (after OTP verified)
+    @Transactional
+    public FoodListing deliverListing(int listingId) {
+        FoodListing listing = foodListingRepository.findById(listingId)
+                .orElseThrow(() -> new RuntimeException("Listing not found"));
+
+        if (!"CLAIMED".equalsIgnoreCase(listing.getStatus())) {
+            throw new RuntimeException("Listing must be CLAIMED before marking as DELIVERED.");
+        }
+
+        listing.setStatus("DELIVERED");
+
+        try {
+            return foodListingRepository.save(listing);
+        } catch (OptimisticLockException ex) {
+            throw new RuntimeException("Conflict: Delivery status already updated.");
+        }
+    }
+
+    // DELETE
     public void deleteListing(int id) {
         foodListingRepository.deleteById(id);
     }
