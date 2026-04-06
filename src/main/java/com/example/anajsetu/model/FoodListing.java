@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "food_listings")
 @Getter
@@ -64,6 +66,7 @@ private String expiryTime;          // ← changed LocalDateTime to String
 
     @ManyToOne
     @JoinColumn(name = "claimed_by_id")
+    @JsonIgnore
     private User claimedBy;
 
     @Column(name = "claimed_by_name")
@@ -75,11 +78,18 @@ private String expiryTime;          // ← changed LocalDateTime to String
     @Column(name = "donor_name")
     private String donorName;
 
-    @PrePersist
+        @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
         if (this.status == null) {
             this.status = "AVAILABLE";
         }
     }
+
+    @Column
+    private Double latitude;
+
+    @Column
+    private Double longitude;
+
 }

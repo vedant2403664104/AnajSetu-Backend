@@ -20,21 +20,27 @@ public class User {
     private String name;
 
     @Column(unique = true)
-    private String email;           // ← now nullable (optional for phone users)
+    private String email;
 
-    private String password;        // ← now nullable (optional for phone users)
+    private String password;
 
     @Column(unique = true)
-    private String phone;           // ← now unique (main login identifier)
+    private String phone;
 
     @Column(nullable = false)
-    private String role;            // "USER", "NGO", "VOLUNTEER"
+    private String role; // "DONOR", "NGO", "DELIVERY"
 
     @Column(name = "is_verified")
-    private Integer isVerified = 0; // 0 = not verified, 1 = verified
+    private Integer isVerified = 0;
 
     private String address;
 
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
+
+    @Column
+private Double latitude;
+
+@Column
+private Double longitude;
 }

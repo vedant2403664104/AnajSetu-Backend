@@ -68,8 +68,19 @@ public class FoodListingService {
         }
 
         listing.setStatus("CLAIMED");
+        listing.setNgoId(ngoId);                        // ✅ set ngoId explicitly
         listing.setClaimedBy(ngo);
+       listing.setClaimedByName(ngo.getName() != null ? ngo.getName() : "");
         listing.setNgoPhone(ngo.getPhone());
+
+        // ✅ AUTO-ASSIGN: find any available delivery partner
+        List<User> drivers = userRepository.findByRole("DELIVERY");
+        if (!drivers.isEmpty()) {
+            listing.setDriverId(drivers.get(0).getId());
+            log.info("Auto-assigned driver: {} (id={})", drivers.get(0).getName(), drivers.get(0).getId());
+        } else {
+            log.warn("No delivery partner found — driver_id will be null for listing {}", listingId);
+        }
 
         try {
             return foodListingRepository.save(listing);

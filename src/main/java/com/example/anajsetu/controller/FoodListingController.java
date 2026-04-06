@@ -17,10 +17,55 @@ public class FoodListingController {
     @Autowired
     private FoodListingService foodListingService;
 
-    // CREATE listing
     @PostMapping
-    public ResponseEntity<FoodListing> createListing(@RequestBody FoodListing foodListing) {
-        return new ResponseEntity<>(foodListingService.createListing(foodListing), HttpStatus.CREATED);
+    public ResponseEntity<?> createListing(@RequestBody FoodListing foodListing) {
+        try {
+            if (foodListing.getTitle() == null || foodListing.getTitle().isEmpty())
+                foodListing.setTitle(foodListing.getFoodName());
+
+            if (foodListing.getQuantity() == null) {
+                String qs = foodListing.getQuantityStr();
+                if (qs != null) {
+                    String numOnly = qs.replaceAll("[^0-9]", "");
+                    foodListing.setQuantity(numOnly.isEmpty() ? 0 : Integer.parseInt(numOnly));
+                } else {
+                    foodListing.setQuantity(0);
+                }
+            }
+
+            if (foodListing.getVersion() == null)
+                foodListing.setVersion(0);
+
+            if (foodListing.getFoodType() == null || foodListing.getFoodType().isEmpty())
+                foodListing.setFoodType("OTHER");
+
+            if (foodListing.getPickupDeadline() == null)
+                foodListing.setPickupDeadline(java.time.LocalDateTime.now().plusHours(6));
+
+            if (foodListing.getQuantityUnit() == null || foodListing.getQuantityUnit().isEmpty())
+                foodListing.setQuantityUnit("meals");
+
+            if (foodListing.getDescription() == null)
+                foodListing.setDescription("");
+
+            if (foodListing.getDonorName() == null)
+                foodListing.setDonorName("");
+
+            if (foodListing.getNgoPhone() == null)
+                foodListing.setNgoPhone("");
+
+            if (foodListing.getClaimedByName() == null)
+                foodListing.setClaimedByName("");
+
+            FoodListing saved = foodListingService.createListing(foodListing);
+            return new ResponseEntity<>(saved, HttpStatus.CREATED);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("EXACT ERROR: " + e.getMessage());
+        }
     }
 
     // GET all available
